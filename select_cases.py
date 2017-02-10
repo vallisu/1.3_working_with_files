@@ -23,3 +23,4 @@ print(number_of_strings)
 file = open(path_to_file)
 
 file.close()
+
