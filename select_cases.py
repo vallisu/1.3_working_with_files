@@ -29,4 +29,3 @@ file = open(path_to_file)
 print(file.read())
 
 file.close()
-
