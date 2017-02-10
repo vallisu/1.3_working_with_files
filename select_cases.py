@@ -8,19 +8,25 @@ import os
 
 # Enter path
 path_to_file = input('Enter the path where .txt file is located: ')
-while os.path.exists(path_to_file) is False:
+while not os.path.exists(path_to_file):
     path_to_file = input('The entered path to file is incorrect. Try again: ')
 
 # Enter a count of strings
-try:
-    number_of_strings = int(input('Enter a number of strings: '))
-except ValueError:
-    number_of_strings = input('A number of strings is incorrect. Try again: ')
+while True:
+    try:
+        number_of_strings = input('Enter a valid number of strings: ')
+        if not number_of_strings:
+            break
+        number_of_strings = int(number_of_strings)
+    except ValueError:
+        continue
+    break
 
 number_of_strings = number_of_strings or 10
 
-print(number_of_strings)
+# Open file
 file = open(path_to_file)
+print(file.read())
 
 file.close()
 
