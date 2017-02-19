@@ -3,6 +3,13 @@
 # который содержит таблицу в текстовом виде (разделителями являются табуляция и символ новой строки)
 # и необязательный параметр — количество строк, которые надо выбрать из файла.
 # По умолчанию необходимо выбрать 10 строк.
+#  Алгоритм работы функции:
+# 1) Считать содержимое исходного файла;
+# 2) Вырезать заданное число строк из файла случайным образом;
+# 3) Записать выбранные строки в результирующий файл. Путь к этому файлу и его расширение совпадает
+#    с путем и расширением исходного файла, а имя формируется как имя исходного файла + «_res»;
+# 4) Сохранить исходный файл без выбранных строк;
+# 5) Вернуть необходимо путь к результирующему файлу.
 
 import os
 import random
@@ -23,26 +30,30 @@ while True:
     except ValueError:
         continue
     break
-
 number_of_strings = number_of_strings or 10
 
-# Open file
-file = open(path_to_file)
 
-# Create and open new file with "_res" using re
-(path, filename) = os.path.split(path_to_file)
-new_file_res = re.sub(r".txt", r"_res.txt", filename)
-file_res = os.path.join(path, new_file_res)
-file_res = open(file_res, 'w')
+def select_cases(path_to_file, number_of_strings):
+    # Open file
+    file = open(path_to_file, 'r+')
 
-lines = file.readlines()
-strings = len(lines)
+    # Create and open new file with "_res" using re
+    (path, filename) = os.path.split(path_to_file)
+    new_file_res = re.sub(r".txt", r"_res.txt", filename)
+    file_res_path = os.path.join(path, new_file_res)
+    file_res = open(file_res_path, 'w+')
 
-file_res.write(lines[0])
-for n in range(number_of_strings):
-    file_res.write(lines[random.randint(1, strings-1)] + '\n')
+    lines = file.readlines()
+    strings = len(lines)
 
-file.close()
-file_res.close()
+    file_res.write(lines[0])
+    for n in range(number_of_strings):
+        file_res.write(lines[random.randint(1, strings - 1)] + '\n')
 
-print("Done. Check the created file near the parent file is located. ")
+    file.close()
+    file_res.close()
+
+    return os.path.abspath(file_res_path)
+
+res = select_cases(path_to_file, number_of_strings)
+print("Path for your file with test cases: " + res)
