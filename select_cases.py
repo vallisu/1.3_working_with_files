@@ -20,13 +20,22 @@ path_to_file = input('Enter the path where .txt file is located: ')
 while not os.path.exists(path_to_file):
     path_to_file = input('The entered path to file is incorrect. Try again: ')
 
+# Open the file for count a number of strings
+file = open(path_to_file)
+lines = file.readlines()
+file.close()
+
 # Enter a count of strings
 while True:
     try:
-        number_of_strings = input('Enter a valid number of strings: ')
+        number_of_strings = input('Enter a valid number of strings not more than ' + str(len(lines)-1) + ' : ')
         if not number_of_strings:
             break
         number_of_strings = int(number_of_strings)
+        while number_of_strings > len(lines) - 1:
+            number_of_strings = input(
+                'Enter a valid number of strings not more than ' + str(len(lines)-1) + ' : ')
+            number_of_strings = int(number_of_strings)
     except ValueError:
         continue
     break
@@ -35,7 +44,7 @@ number_of_strings = number_of_strings or 10
 
 def select_cases(path_to_file, number_of_strings):
     # Open file
-    file = open(path_to_file, 'r+')
+    file = open(path_to_file, 'r')
 
     # Create and open new file with "_res" using re
     (path, filename) = os.path.split(path_to_file)
@@ -44,16 +53,24 @@ def select_cases(path_to_file, number_of_strings):
     file_res = open(file_res_path, 'w+')
 
     lines = file.readlines()
+    file.close()
     strings = len(lines)
 
     file_res.write(lines[0])
     for n in range(number_of_strings):
-        file_res.write(lines[random.randint(1, strings - 1)] + '\n')
+        rand = random.randint(1, strings - 1)
+        file_res.write(lines[rand] + '\n')
+        lines.pop(rand)
+        strings = strings - 1
 
+    file = open(path_to_file, 'w')
+    for i in lines:
+        file.write(i + '\n')
     file.close()
     file_res.close()
 
     return os.path.abspath(file_res_path)
+
 
 res = select_cases(path_to_file, number_of_strings)
 print("Path for your file with test cases: " + res)
