@@ -51,11 +51,13 @@ def select_cases(path_to_file, number_of_strings):
     new_file_res = re.sub(r".txt", r"_res.txt", filename)
     file_res_path = os.path.join(path, new_file_res)
     file_res = open(file_res_path, 'w+')
-
+    
+    # Strings from file -> to list
     lines = file.readlines()
     file.close()
     strings = len(lines)
 
+    # Select string by random, push it to new file and remove from list
     file_res.write(lines[0])
     for n in range(number_of_strings):
         rand = random.randint(1, strings - 1)
